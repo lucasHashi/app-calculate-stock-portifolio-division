@@ -20,7 +20,7 @@ def main():
                 0,
                 1000,
                 500,
-                1
+                5
             )
     
 
@@ -38,7 +38,7 @@ def main():
             df_stocks_and_grades['investment'] = df_stocks_and_grades['partitions'] * partition_from_total_invested
 
             st.write(lcm_grades)
-            st.write(df_stocks_and_grades)
+            st.dataframe(df_stocks_and_grades)
         else:
             st.write('Select one or more stocks')
 
