@@ -7,21 +7,31 @@ from math import gcd
 def main():
     df_stocks_sectors = pd.read_excel('stocks_data.xlsx')
 
-    st.header('Calculator portifolio divisor')
+    st.header('Portfolio division calculator')
 
     total_invested = st.number_input('Total invested', 0, 1000000, 100000, 100)
 
-    stocks_selected = st.multiselect('Stocks', df_stocks_sectors['ticker'])
+    # ----------- UPLOAD GRADES CSV -----------
+    stocks_selected = []
+    uploaded_grades = st.file_uploader("Load grades - Optional")
+    if uploaded_grades is not None:
+        st.balloons()
+        df_stocks_and_grades = pd.read_csv(uploaded_grades)
+        stocks_selected = list(df_stocks_and_grades['stock'])
+
+    stocks_selected = st.multiselect('Stocks', df_stocks_sectors['ticker'], stocks_selected)
 
     # ----------- GRADE SLIDERS FOR EACH STOCK LISTED -----------
     if stocks_selected:
         stocks_and_grades = {}
         for stock in stocks_selected:
+            initial_grade = 500 if stock not in list(df_stocks_and_grades['stock']) else int(df_stocks_and_grades[df_stocks_and_grades['stock'] == stock]['grade'].iloc[0])
+
             stocks_and_grades[stock] = st.slider(
                 'Grade for {}'.format(stock),
                 0,
                 1000,
-                500,
+                initial_grade,
                 5
             )
 
