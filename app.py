@@ -13,7 +13,7 @@ def main():
 
     # ----------- UPLOAD GRADES CSV -----------
     stocks_selected = []
-    df_stocks_and_grades = pd.DataFrame()
+    df_stocks_and_grades = pd.DataFrame(columns=['stock', 'grade'])
     uploaded_grades = st.file_uploader("Load grades - Optional")
     if uploaded_grades is not None:
         df_stocks_and_grades = pd.read_csv(uploaded_grades)
