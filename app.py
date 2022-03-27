@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 from math import gcd
 
+import portifolio_analysis
+
 
 def main():
     df_stocks_sectors = pd.read_excel('stocks_data.xlsx')
@@ -66,6 +68,9 @@ def main():
                 file_name='stocks_and_grades.csv',
                 mime='text/csv',
             )
+
+            # ----------- PORTIFOLIO ANALYSIS -----------
+            portifolio_analysis.load_portifolio_analysis(df_stocks_and_grades)
         else:
             st.write('Select one or more stocks')
 
