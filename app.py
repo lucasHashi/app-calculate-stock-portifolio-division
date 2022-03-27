@@ -13,9 +13,9 @@ def main():
 
     # ----------- UPLOAD GRADES CSV -----------
     stocks_selected = []
+    df_stocks_and_grades = pd.DataFrame()
     uploaded_grades = st.file_uploader("Load grades - Optional")
     if uploaded_grades is not None:
-        st.balloons()
         df_stocks_and_grades = pd.read_csv(uploaded_grades)
         stocks_selected = list(df_stocks_and_grades['stock'])
 
@@ -45,6 +45,14 @@ def main():
 
             df_stocks_and_grades['investment'] = df_stocks_and_grades['percent'] * total_invested
             df_stocks_and_grades['investment'] = df_stocks_and_grades['investment'].round(2)
+
+            df_stocks_and_grades = df_stocks_and_grades.merge(
+                df_stocks_sectors,
+                'left',
+                left_on='stock',
+                right_on='ticker'
+            )
+            df_stocks_and_grades.drop('ticker', axis=1, inplace=True)
 
             df_stocks_and_grades_print = prepare_df_to_print(df_stocks_and_grades)
 
