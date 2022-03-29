@@ -7,7 +7,6 @@ import plotly.io as pio
 pio.templates.default = "plotly_white"
 
 
-
 def load_portifolio_analysis(df_stocks_and_grades):
     st.write('# Portifolio analysis')
 
@@ -44,6 +43,8 @@ def load_treemap_figure(df):
 
     df_stocks_hierarchy = calculate_stocks_hierarchy(df)
 
+    st.write(df_stocks_hierarchy)
+
     fig_treemap_stocks = go.Figure(
         go.Treemap(
             labels=df_stocks_hierarchy['labels'],
@@ -58,6 +59,9 @@ def load_treemap_figure(df):
 
 
 def calculate_stocks_hierarchy(df):
+    sectors_duplicated = list(df.loc[df['sector'] == df['sub_sector'], 'sector'])
+    df['sector'] = df['sector'].apply(lambda sector: sector + '.' if sector in sectors_duplicated else sector)
+
     labels = ['Stocks'] + list(df['sector']) + list(df['sub_sector']) + list(df['stock'])
     
     parents = ['']
