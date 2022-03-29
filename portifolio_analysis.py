@@ -43,8 +43,6 @@ def load_treemap_figure(df):
 
     df_stocks_hierarchy = calculate_stocks_hierarchy(df)
 
-    st.write(df_stocks_hierarchy)
-
     fig_treemap_stocks = go.Figure(
         go.Treemap(
             labels=df_stocks_hierarchy['labels'],
