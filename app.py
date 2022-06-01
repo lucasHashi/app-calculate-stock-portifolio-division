@@ -1,13 +1,15 @@
+from json import load
 from operator import index
 import pandas as pd
 import streamlit as st
 from math import gcd
 
+import load_data
 import portifolio_analysis
 
 
 def main():
-    df_stocks_sectors = pd.read_excel('stocks_data.xlsx')
+    df_assets_data = load_data.load_assets_data()
 
     st.header('Portfolio division calculator')
 
@@ -15,13 +17,23 @@ def main():
 
     # ----------- UPLOAD GRADES CSV -----------
     stocks_selected = []
+    fiis_selected = []
+    bdrs_selected = []
     df_stocks_and_grades = pd.DataFrame(columns=['stock', 'grade'])
     uploaded_grades = st.file_uploader("Load grades - Optional")
     if uploaded_grades is not None:
         df_stocks_and_grades = pd.read_csv(uploaded_grades)
         stocks_selected = list(df_stocks_and_grades['stock'])
 
-    stocks_selected = st.multiselect('Stocks', df_stocks_sectors['ticker'], stocks_selected)
+    df_stocks_data = df_assets_data.loc[
+        (df_assets_data['class'] == 'Acao') | (df_assets_data['class'] == 'Stock'), :
+    ]
+    df_fiis_data = df_assets_data.loc[df_assets_data['class'] == 'FII', :]
+    df_bdrs_data = df_assets_data.loc[df_assets_data['class'] == 'BDR', :]
+
+    stocks_selected = st.multiselect('Acoes', df_stocks_data['ticker'], stocks_selected)
+    fiis_selected = st.multiselect('FIIs', df_fiis_data['ticker'], fiis_selected)
+    bdrs_selected = st.multiselect('BDRs', df_bdrs_data['ticker'], bdrs_selected)
 
     # ----------- GRADE SLIDERS FOR EACH STOCK LISTED -----------
     if stocks_selected:
@@ -49,7 +61,7 @@ def main():
             df_stocks_and_grades['investment'] = df_stocks_and_grades['investment'].round(2)
 
             df_stocks_and_grades = df_stocks_and_grades.merge(
-                df_stocks_sectors,
+                df_assets_data,
                 'left',
                 left_on='stock',
                 right_on='ticker'
